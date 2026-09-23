@@ -1,0 +1,9 @@
+{
+  "name": "penuntun",
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=backend",
+    "dev:web": "npm run dev --workspace=frontend"
+  }
+}
