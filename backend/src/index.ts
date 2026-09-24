@@ -1,4 +1,4 @@
-//backend/src/index.ts
+// backend/src/index.ts
 
 import "dotenv/config";
 
@@ -10,6 +10,10 @@ import perangkatRoutes from "./routes/perangkat.routes";
 import penggunaRoutes from "./routes/pengguna.routes";
 import notifikasiRoutes from "./routes/notifikasi.routes";
 import pengaturanRoutes from "./routes/pengaturan.routes";
+import deviceRoutes from "./routes/device.routes";
+import gpsRoutes from "./routes/gps.routes";
+
+import { startDeviceStatusMonitor } from "./services/device-status.service";
 
 const app = express();
 
@@ -27,6 +31,7 @@ app.use((req, _res, next) => {
   console.log(
     `[PENUNTUN API] ${new Date().toISOString()} ${req.method} ${req.path}`
   );
+
   next();
 });
 
@@ -51,6 +56,9 @@ app.use("/perangkat", perangkatRoutes);
 app.use("/pengguna", penggunaRoutes);
 app.use("/notifikasi", notifikasiRoutes);
 app.use("/pengaturan", pengaturanRoutes);
+
+app.use("/device", deviceRoutes);
+app.use("/gps", gpsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
@@ -88,4 +96,6 @@ app.listen(PORT, () => {
   console.log(`Health : http://localhost:${PORT}/health`);
   console.log("========================================");
   console.log("");
+
+  startDeviceStatusMonitor();
 });
