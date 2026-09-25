@@ -1,4 +1,7 @@
+//frontend/src/components/layout/PageHeader.tsx
+
 "use client";
+import Link from "next/link";
 import { useSession } from "@/hooks/useSession";
 
 export function PageHeader({ title, subtitle }: { title: string; subtitle?: string }) {
@@ -17,7 +20,7 @@ export function PageHeader({ title, subtitle }: { title: string; subtitle?: stri
         {subtitle && <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>}
       </div>
       {session && (
-        <div className="flex items-center gap-3">
+        <Link href="/profil" className="flex items-center gap-3 rounded-input px-2 py-1 hover:bg-surface-sunken">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
             {inisial}
           </div>
@@ -27,7 +30,7 @@ export function PageHeader({ title, subtitle }: { title: string; subtitle?: stri
             </div>
             <div className="text-xs text-text-secondary">{session.nama_staf}</div>
           </div>
-        </div>
+        </Link>
       )}
     </div>
   );

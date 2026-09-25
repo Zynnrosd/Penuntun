@@ -14,7 +14,23 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       ...options.headers,
     },
   });
-  if (!res.ok) throw new Error((await res.json()).message ?? "Terjadi kesalahan");
+
+  if (!res.ok) {
+    let message = "Terjadi kesalahan";
+    try {
+      const body = await res.json();
+      message = body.message ?? message;
+    } catch {
+      // response error tidak berbentuk JSON, biarkan pesan default
+    }
+    throw new Error(message);
+  }
+
+  // DELETE biasanya return 204 No Content — tidak ada body JSON
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
   return res.json();
 }
 
