@@ -1,7 +1,27 @@
 node_modules/
+
 .next/
+
 dist/
+
 frontend/.env.local
+
 backend/.env
+backend/.env.example
+
 .DS_Store
+
 *.log
+
+# AI / local project instructions
+Prd.md
+GEMINI.md
+Designbrief.md
+CLAUDE.md
+AGENTS.md
+architecture.md
+
+.gemini/
+.claude/
+.agents/
+.impeccable/

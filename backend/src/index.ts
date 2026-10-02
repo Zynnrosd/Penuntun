@@ -12,7 +12,7 @@ import notifikasiRoutes from "./routes/notifikasi.routes";
 import pengaturanRoutes from "./routes/pengaturan.routes";
 import deviceRoutes from "./routes/device.routes";
 import gpsRoutes from "./routes/gps.routes";
-
+import geofenceRoutes from "./routes/geofence.routes";
 import { startDeviceStatusMonitor } from "./services/device-status.service";
 
 const app = express();
@@ -26,6 +26,7 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/geofence", geofenceRoutes);
 
 app.use((req, _res, next) => {
   console.log(

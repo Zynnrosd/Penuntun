@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Users, Wifi, BatteryWarning, AlertTriangle } from "lucide-react";
 import { api } from "@/lib/api-client";
+import { useRealtimeTable } from "@/hooks/useRealtimeTable";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { DonutChart } from "@/components/dashboard/DonutChart";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -13,7 +14,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const muat = useCallback(() => {
     Promise.all([api.get<Perangkat[]>("/perangkat"), api.get<Notifikasi[]>("/notifikasi")])
       .then(([p, n]) => {
         setPerangkat(p);
@@ -22,6 +23,10 @@ export default function HomePage() {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(muat, [muat]);
+  useRealtimeTable("perangkat", muat);
+  useRealtimeTable("notifikasi", muat);
 
   if (loading) return <p className="text-text-secondary">Memuat data...</p>;
   if (error) return <p className="text-danger">Gagal memuat: {error}</p>;
@@ -37,14 +42,14 @@ export default function HomePage() {
     <div>
       <PageHeader title="Dashboard" subtitle="Ringkasan monitoring sistem PENUNTUN" />
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">  
         <StatCard label="Total Perangkat" value={perangkat.length} tone="primary" icon={<Users size={20} />} />
         <StatCard label="Perangkat Online" value={online} tone="success" icon={<Wifi size={20} />} />
         <StatCard label="Baterai Kritis" value={bateraiKritis} tone="warning" icon={<BatteryWarning size={20} />} suffix="< 20%" />
         <StatCard label="SOS Aktif" value={sosAktif} tone="danger" icon={<AlertTriangle size={20} />} />
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-card bg-surface p-6 shadow-card">
           <h2 className="mb-2 text-lg font-semibold text-text-primary">Status Baterai</h2>
           <DonutChart

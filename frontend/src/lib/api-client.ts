@@ -21,12 +21,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       const body = await res.json();
       message = body.message ?? message;
     } catch {
-      // response error tidak berbentuk JSON, biarkan pesan default
     }
     throw new Error(message);
   }
 
-  // DELETE biasanya return 204 No Content — tidak ada body JSON
   if (res.status === 204) {
     return undefined as T;
   }
@@ -38,5 +36,6 @@ export const api = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body: unknown) => request<T>(path, { method: "POST", body: JSON.stringify(body) }),
   patch: <T>(path: string, body: unknown) => request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
+  put: <T>(path: string, body: unknown) => request<T>(path, { method: "PUT", body: JSON.stringify(body) }),
   delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };

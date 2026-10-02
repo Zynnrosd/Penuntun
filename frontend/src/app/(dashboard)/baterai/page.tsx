@@ -28,9 +28,9 @@ export default function BateraiPage() {
 
   return (
     <div>
-      <PageHeader title="Status Baterai" subtitle="Status daya semua perangkat terhubung" />
+      <PageHeader title="Status Baterai" subtitle="Status daya seluruh perangkat yang terhubung" />
 
-      <div className="mb-6 grid grid-cols-4 gap-4">
+      <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard label="Sedang Mengisi" value={0} tone="primary" />
         <StatCard label="Status Baik" value={baik} tone="success" />
         <StatCard label="Status Sedang" value={sedang} tone="warning" />
@@ -41,6 +41,7 @@ export default function BateraiPage() {
         {data.length === 0 ? (
           <p className="p-8 text-center text-sm text-text-secondary">Belum ada perangkat terdaftar.</p>
         ) : (
+        <div className="overflow-x-auto">  
           <table className="w-full text-sm">
             <thead className="bg-surface-sunken text-left text-text-secondary">
               <tr>
@@ -74,6 +75,7 @@ export default function BateraiPage() {
               })}
             </tbody>
           </table>
+        </div>  
         )}
       </div>
     </div>

@@ -1,181 +1,215 @@
-//frontend/src/app/page.tsx
-
+import Image from "next/image";
 import Link from "next/link";
-import {
-  Compass, MapPin, Siren, ShieldCheck, Wifi, PersonStanding, TriangleAlert,
-  Camera, Brain, Volume2, ArrowRight, Users, Home as HomeIcon,
-} from "lucide-react";
+import { Montserrat } from "next/font/google";
+import { ArrowRight, Camera, Brain, Volume2, MapPin, Siren, Users, Radio, CircleDot } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
+
+const display = Montserrat({ subsets: ["latin"], weight: ["600", "700"] });
+
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
       {/* NAVBAR */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-input bg-secondary text-white">
-              <Compass size={18} />
-            </div>
-            <span className="text-lg font-bold text-secondary">PENUNTUN</span>
-          </div>
-          <nav className="hidden items-center gap-8 text-sm font-medium text-text-secondary md:flex">
-            <a href="#cara-kerja" className="hover:text-secondary">Cara Kerja</a>
-            <a href="#fitur" className="hover:text-secondary">Fitur</a>
-            <a href="#untuk-siapa" className="hover:text-secondary">Untuk Siapa</a>
+      <header className="sticky top-0 z-20 h-[76px] bg-background/75 backdrop-blur-md">
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-6">
+          <Logo variant="blue" />
+            
+          <nav className="hidden items-center gap-7 text-sm font-medium text-text-secondary md:flex">
+            <a href="#home" className={`transition-colors hover:text-primary ${focusRing}`}>Home</a>
+            <a href="#fitur" className={`transition-colors hover:text-primary ${focusRing}`}>Fitur</a>
+            <a href="#cara-kerja" className={`transition-colors hover:text-primary ${focusRing}`}>Cara Kerja</a>
           </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="rounded-input px-4 py-2 text-sm font-medium text-secondary hover:bg-secondary-soft">
+          <div className="flex items-center gap-2">
+            <Link href="/login" className={`rounded-full px-4 py-2 text-sm font-medium text-text-primary hover:text-primary ${focusRing}`}>
               Masuk
             </Link>
-            <Link href="/register" className="rounded-input bg-secondary px-4 py-2 text-sm font-medium text-white hover:opacity-90">
-              Daftar Sekarang
+            <Link href="/register" className={`rounded-full bg-primary px-5 py-2 text-sm font-medium text-white shadow-md shadow-primary/30 hover:bg-primary-hover ${focusRing}`}>
+              Daftar
             </Link>
           </div>
         </div>
       </header>
 
-      {/* HERO — asimetris, ilustrasi radar */}
-      <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-20 md:grid-cols-2">
-        <div className="animate-fade-up">
-          <span className="mb-4 inline-block rounded-pill bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
-             HIDUP JOKOWI
-          </span>
-          <h1 className="text-4xl font-bold leading-tight text-secondary md:text-5xl">
-            Navigasi Cerdas untuk Kemandirian Tunanetra
-          </h1>
-          <p className="mt-5 max-w-md text-text-secondary">
-            PENUNTUN mendeteksi rintangan secara real-time lewat tongkat pintar, dan memberi ketenangan bagi
-            keluarga maupun yayasan lewat pemantauan lokasi langsung.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/register" className="group flex items-center gap-2 rounded-input bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-hover">
-              Mulai Sekarang <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link href="/login" className="rounded-input border border-border-strong px-6 py-3 text-sm font-semibold text-secondary hover:bg-secondary-soft">
-              Sudah Punya Akun
-            </Link>
-          </div>
-          <div className="mt-10 flex gap-8 text-sm">
-            <div><div className="text-2xl font-bold text-secondary">3</div><div className="text-text-secondary">Jenis rintangan</div></div>
-            <div><div className="text-2xl font-bold text-secondary">&lt;2s</div><div className="text-text-secondary">Respons suara</div></div>
-            <div><div className="text-2xl font-bold text-secondary">24/7</div><div className="text-text-secondary">Pemantauan</div></div>
-          </div>
-        </div>
-
-        {/* Ilustrasi radar */}
-        <div className="relative mx-auto flex h-80 w-80 items-center justify-center">
-          <span className="absolute h-full w-full rounded-full border border-primary/20 animate-radar" />
-          <span className="absolute h-full w-full rounded-full border border-primary/20 animate-radar" style={{ animationDelay: "0.8s" }} />
-          <span className="absolute h-full w-full rounded-full border border-primary/20 animate-radar" style={{ animationDelay: "1.6s" }} />
-
-          <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full bg-secondary shadow-modal">
-            <PersonStanding size={40} className="text-white" />
+      {/* HERO — foto besar lagi, tepi atas memudar (gradasi) jadi tidak nabrak header */}
+      <section id="home" className="relative flex min-h-[calc(100vh-76px)] items-center overflow-hidden">
+        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-6 py-8 lg:grid-cols-2">
+          <div className="animate-fade-up">
+            <h1 className={`${display.className} text-4xl font-bold leading-[1.15] text-text-primary md:text-5xl`}>
+              Tongkat pintar untuk langkah yang lebih aman
+            </h1>
+            <p className="mt-6 max-w-sm leading-relaxed text-text-secondary">
+              PENUNTUN mendeteksi rintangan di depan penyandang tunanetra, dan memberi yayasan atau
+              keluarga cara memantau lokasi serta sinyal darurat secara real-time.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/register"
+                className={`inline-flex items-center gap-2 rounded-input bg-primary px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-primary/30 hover:bg-primary-hover ${focusRing}`}
+              >
+                Daftar Sekarang <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/login"
+                className={`inline-flex items-center rounded-input border border-border px-6 py-3.5 text-sm font-semibold text-text-primary hover:bg-surface ${focusRing}`}
+              >
+                Masuk
+              </Link>
+            </div>
           </div>
 
-          <div className="absolute left-4 top-6 flex h-14 w-14 animate-float items-center justify-center rounded-2xl bg-danger shadow-card">
-            <TriangleAlert size={22} className="text-white" />
-          </div>
-          <div className="absolute right-2 top-16 flex h-14 w-14 animate-float items-center justify-center rounded-2xl bg-primary shadow-card" style={{ animationDelay: "1.2s" }}>
-            <MapPin size={22} className="text-white" />
-          </div>
-          <div className="absolute bottom-4 left-16 flex h-14 w-14 animate-float items-center justify-center rounded-2xl bg-success shadow-card" style={{ animationDelay: "0.6s" }}>
-            <Wifi size={22} className="text-white" />
+          <div className="relative mx-auto h-[360px] w-full max-w-lg sm:h-[480px] lg:h-[min(74vh,680px)]">
+            <div
+              className="absolute inset-0 overflow-hidden rounded-[3rem] shadow-xl shadow-text-primary/10"
+              style={{
+                WebkitMaskImage: "radial-gradient(ellipse 100% 100% at 50% 50%, black 90%, transparent 100%)",
+                maskImage: "radial-gradient(ellipse 100% 100% at 50% 50%, black 90%, transparent 100%)",
+              }}
+            >
+              <Image src="/auth-login.png" alt="Pengguna PENUNTUN berjalan di trotoar" fill className="object-cover" priority />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CARA KERJA — 3 langkah */}
-      <section id="cara-kerja" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold text-secondary">Bagaimana PENUNTUN Bekerja</h2>
-        <p className="mx-auto mt-2 max-w-lg text-center text-text-secondary">
-          Tiga tahap sederhana dari deteksi rintangan sampai peringatan suara — semuanya diproses lokal, secara instan.
-        </p>
+      {/* DASHBOARD — foto melengkung dari tepi kiri + mockup panel, teks di kanan */}
+      <section id="fitur" className="relative py-20 lg:py-24">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 px-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="relative min-h-[420px]">
+            <div className="absolute inset-y-0 -left-6 right-1/3 overflow-hidden rounded-r-full lg:-left-[calc((100vw-72rem)/2+1.5rem)]">
+              <Image
+                src="/auth-register.png"
+                alt="Pengguna PENUNTUN berjalan di area perkotaan"
+                fill
+                className="object-cover object-[center_15%]"
+              />
+            </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-3">
-          {[
-            { icon: <Camera size={22} />, judul: "Tangkap Visual", teks: "Kamera menangkap kondisi jalan di depan pengguna secara kontinu." },
-            { icon: <Brain size={22} />, judul: "Deteksi AI Lokal", teks: "Model YOLOv8n mengidentifikasi lubang, tangga, dan kendaraan langsung di perangkat." },
-            { icon: <Volume2 size={22} />, judul: "Peringatan Suara", teks: "Instruksi audio diberikan dalam Bahasa Indonesia sebelum pengguna menyentuh rintangan." },
-          ].map((s, i) => (
-            <div key={s.judul} className="relative rounded-card bg-surface p-6 text-center shadow-card">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-primary">
-                {s.icon}
+            {/* Mockup panel dashboard — ilustrasi, status selalu ikon + teks, merah hanya untuk SOS */}
+            <figure aria-hidden="true" className="relative ml-auto mt-10 w-full max-w-sm -rotate-3 rounded-[28px] border border-border bg-white p-4 shadow-2xl shadow-text-primary/20">
+              <figcaption className="flex items-center justify-between px-1 pb-3">
+                <span className="text-sm font-semibold text-text-primary">Pemantauan</span>
+                <span className="text-xs text-text-secondary">Contoh tampilan</span>
+              </figcaption>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 rounded-input bg-surface p-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft text-primary"><MapPin size={16} /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-text-primary">Pak Budi, PNT-01</p>
+                    <p className="text-xs text-text-secondary">Jl. Pahlawan — Live</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-xs font-medium text-success">
+                    <Radio size={11} /> Online
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 rounded-input border border-danger/30 bg-danger/5 p-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-danger/10 text-danger"><Siren size={16} /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-text-primary">Tombol SOS ditekan</p>
+                    <p className="text-xs text-text-secondary">Pak Budi, 2 menit lalu</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-danger px-2 py-0.5 text-xs font-medium text-white">
+                    <Siren size={11} /> SOS
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 rounded-input bg-surface p-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-offline/10 text-offline"><MapPin size={16} /></span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-text-primary">Bu Sari, PNT-04</p>
+                    <p className="text-xs text-text-secondary">Terakhir terlihat 18 menit lalu</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-offline/10 px-2 py-0.5 text-xs font-medium text-offline">
+                    <CircleDot size={11} /> Offline
+                  </span>
+                </div>
               </div>
-              <div className="mb-1 text-xs font-semibold text-text-secondary">LANGKAH {i + 1}</div>
-              <h3 className="mb-2 font-semibold text-text-primary">{s.judul}</h3>
-              <p className="text-sm text-text-secondary">{s.teks}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+            </figure>
+          </div>
 
-      {/* FITUR */}
-      <section id="fitur" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold text-secondary">Fitur Utama Dashboard</h2>
-        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-4">
-          {[
-            { icon: <MapPin size={20} className="text-white" />, tone: "bg-primary", judul: "Lokasi Real-time", teks: "Pantau posisi pengguna secara live lewat GPS & peta interaktif." },
-            { icon: <Siren size={20} className="text-white" />, tone: "bg-danger", judul: "Notifikasi SOS", teks: "Sinyal darurat langsung terkirim ke dashboard & WhatsApp." },
-            { icon: <ShieldCheck size={20} className="text-white" />, tone: "bg-success", judul: "Geofencing", teks: "Peringatan otomatis saat pengguna keluar dari zona aman." },
-            { icon: <Users size={20} className="text-white" />, tone: "bg-warning", judul: "Multi-Yayasan", teks: "Satu platform untuk banyak yayasan, data terisolasi aman." },
-          ].map((f) => (
-            <div key={f.judul} className="group rounded-card bg-surface p-6 shadow-card transition-transform hover:-translate-y-1">
-              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-input ${f.tone}`}>{f.icon}</div>
-              <h3 className="mb-1 font-semibold text-text-primary">{f.judul}</h3>
-              <p className="text-sm text-text-secondary">{f.teks}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* UNTUK SIAPA */}
-      <section id="untuk-siapa" className="mx-auto max-w-6xl px-6 py-20">
-        <h2 className="text-center text-3xl font-bold text-secondary">Untuk Siapa PENUNTUN?</h2>
-        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="rounded-card bg-surface p-8 shadow-card">
-            <Users size={28} className="mb-3 text-primary" />
-            <h3 className="mb-2 text-xl font-semibold text-text-primary">Yayasan & Organisasi</h3>
-            <p className="mb-5 text-sm text-text-secondary">
-              Kelola banyak pengguna dan perangkat sekaligus, dengan data yang terisolasi aman antar yayasan.
+          <div>
+            <h2 className={`${display.className} text-3xl font-bold leading-tight text-text-primary md:text-4xl`}>
+              Ingin tahu mereka baik-baik saja?
+            </h2>
+            <p className="mt-5 max-w-sm leading-relaxed text-text-secondary">
+              Dengan dashboard <span className="font-medium text-primary">PENUNTUN</span>, posisi dan kondisi
+              setiap pengguna selalu bisa Anda lihat.
             </p>
-            <Link href="/register?tipe=yayasan" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-              Daftarkan Yayasan <ArrowRight size={14} />
-            </Link>
+            <ul className="mt-6 space-y-3 text-sm text-text-secondary">
+              {[
+                { icon: <MapPin size={15} />, teks: "Lokasi real-time, dengan waktu terakhir terlihat saat offline" },
+                { icon: <Siren size={15} />, teks: "Notifikasi SOS ke dashboard dan WhatsApp bersamaan" },
+                { icon: <Users size={15} />, teks: "Beberapa yayasan dalam satu platform, data terpisah penuh" },
+              ].map((f) => (
+                <li key={f.teks} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 text-primary">{f.icon}</span>
+                  {f.teks}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="rounded-card bg-surface p-8 shadow-card">
-            <HomeIcon size={28} className="mb-3 text-success" />
-            <h3 className="mb-2 text-xl font-semibold text-text-primary">Keluarga & Perseorangan</h3>
-            <p className="mb-5 text-sm text-text-secondary">
-              Pantau anggota keluarga tunanetra secara pribadi, tanpa perlu bergabung dengan yayasan mana pun.
+        </div>
+      </section>
+
+      {/* CARA KERJA — tiga ikon bulat */}
+      <section id="cara-kerja" className="py-20 lg:py-24">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-primary">Cara Kerja</span>
+          <h2 className={`${display.className} mt-2 text-3xl font-bold text-text-primary`}>Bagaimana cara kerjanya?</h2>
+
+          <div className="relative mt-16 grid grid-cols-1 gap-12 sm:grid-cols-3">
+            <div className="absolute left-0 right-0 top-10 hidden h-px bg-border sm:block" />
+            {[
+              { icon: <Camera size={26} />, judul: "Tangkap visual", teks: "Kamera membaca kondisi jalan di depan pengguna." },
+              { icon: <Brain size={26} />, judul: "Deteksi AI lokal", teks: "Lubang, tangga, dan kendaraan dikenali di perangkat." },
+              { icon: <Volume2 size={26} />, judul: "Peringatan suara", teks: "Instruksi audio sebelum rintangan tersentuh." },
+            ].map((s, i) => (
+              <div key={s.judul} className="relative flex flex-col items-center">
+                <span className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 ring-8 ring-background">
+                  {s.icon}
+                </span>
+                <span className="mt-4 font-mono text-xs text-text-secondary">0{i + 1}</span>
+                <h3 className="mt-1.5 font-semibold text-text-primary">{s.judul}</h3>
+                <p className="mt-2 max-w-[14rem] text-sm text-text-secondary">{s.teks}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER — navy dongker, 3 kolom */}
+      <footer id="tentang" className="mt-10 bg-secondary">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-6 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div>
+            <Logo variant="white" size={36} />
+          
+            <p className="mt-3 max-w-[220px] text-sm leading-relaxed text-white/60">
+              Navigasi berbasis AI dan pemantauan real-time untuk kemandirian penyandang tunanetra.
             </p>
-            <Link href="/register?tipe=perseorangan" className="inline-flex items-center gap-1 text-sm font-semibold text-success hover:underline">
-              Buat Akun Perseorangan <ArrowRight size={14} />
-            </Link>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-white/45">Navigasi</h4>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/75">
+              <li><a href="#home" className="transition-colors hover:text-white">Home</a></li>
+              <li><a href="#fitur" className="transition-colors hover:text-white">Fitur</a></li>
+              <li><a href="#cara-kerja" className="transition-colors hover:text-white">Cara Kerja</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-white/45">Akun</h4>
+            <ul className="mt-4 space-y-2.5 text-sm text-white/75">
+              <li><Link href="/register" className="transition-colors hover:text-white">Daftar</Link></li>
+              <li><Link href="/login" className="transition-colors hover:text-white">Masuk</Link></li>
+            </ul>
           </div>
         </div>
-      </section>
-
-      {/* CTA BANNER */}
-      <section className="mx-auto max-w-6xl px-6 py-10">
-        <div className="rounded-card bg-secondary px-8 py-14 text-center">
-          <h2 className="text-3xl font-bold text-white">Mulai gunakan PENUNTUN hari ini</h2>
-          <p className="mx-auto mt-3 max-w-md text-white/70">
-            Gratis untuk mendaftar — baik untuk yayasan maupun keluarga perseorangan.
-          </p>
-          <Link href="/register" className="mt-6 inline-flex items-center gap-2 rounded-input bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-hover">
-            Daftar Sekarang <ArrowRight size={16} />
-          </Link>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-border py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-text-secondary md:flex-row">
-          <div className="flex items-center gap-2">
-            <Compass size={16} className="text-secondary" />
-            <span className="font-semibold text-secondary">PENUNTUN</span>
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-xs text-white/45 md:flex-row">
+            <p>© 2026 PENUNTUN</p>
+            <p>Althaf, Izac, Naufan Universitas Diponegoro</p>
           </div>
-          <p>© 2026 PENUNTUN — Althaf, Izac, Naufan</p>
         </div>
       </footer>
     </div>
