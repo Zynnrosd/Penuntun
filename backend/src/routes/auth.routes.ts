@@ -3,22 +3,35 @@ import { supabase } from "../lib/supabase";
 
 const router = Router();
 
+router.get("/yayasan", async (req, res) => {
+  const q = (req.query.q as string | undefined)?.trim() ?? "";
+  if (q.length < 2) return res.json([]);
+
+  const aman = q.replace(/[%_]/g, (c) => `\\${c}`);
+
+  const { data, error } = await supabase
+    .from("yayasan")
+    .select("id_yayasan, nama_yayasan")
+    .ilike("nama_yayasan", `%${aman}%`)
+    .limit(8);
+
+  if (error) return res.status(500).json({ message: error.message });
+  res.json(data);
+});
+
 router.post("/register", async (req, res) => {
-  const { email, password, nama_staf, nama_yayasan, no_wa, tipe_akun } = req.body;
+  const { email, password, nama_staf, nama_yayasan, id_yayasan: idYayasanDipilih, no_wa, tipe_akun } = req.body;
 
   const isPerseorangan = tipe_akun === "perseorangan";
 
-  if (!isPerseorangan && !nama_yayasan?.trim()) {
-    return res.status(400).json({ message: "Nama yayasan wajib diisi" });
+  if (!isPerseorangan && !nama_yayasan?.trim() && !idYayasanDipilih) {
+    return res.status(400).json({ message: "Pilih atau isi nama yayasan" });
   }
   if (!nama_staf?.trim()) {
     return res.status(400).json({ message: "Nama lengkap wajib diisi" });
   }
 
-  // Konversi string kosong ke null agar lolos check constraint no_wa di DB
   const noWaBersih: string | null = no_wa?.trim() || null;
-
-  // Validasi format no_wa di awal, sebelum membuat apapun di DB
   if (noWaBersih && !/^\+62[0-9]{9,13}$/.test(noWaBersih)) {
     return res.status(400).json({ message: "Format nomor WhatsApp tidak valid. Gunakan format +62xxxxxxxxx" });
   }
@@ -27,49 +40,41 @@ router.post("/register", async (req, res) => {
   let jadiAdministrator: boolean;
 
   if (isPerseorangan) {
-    // Setiap akun perseorangan dapat tenant sendiri, otomatis jadi Administrator
     const { data: newYayasan, error: yayasanError } = await supabase
       .from("yayasan")
       .insert({ nama_yayasan: `${nama_staf.trim()} (Perseorangan)` })
       .select()
       .single();
-
     if (yayasanError || !newYayasan) {
       return res.status(400).json({ message: yayasanError?.message ?? "Gagal membuat akun perseorangan" });
     }
     idYayasan = newYayasan.id_yayasan;
     jadiAdministrator = true;
-  } else {
-    const { data: existingYayasan } = await supabase
+  } else if (idYayasanDipilih) {
+    const { data: yayasanAda } = await supabase
       .from("yayasan")
       .select("id_yayasan")
-      .ilike("nama_yayasan", nama_yayasan.trim())
-      .maybeSingle();
-
-    if (existingYayasan) {
-      idYayasan = existingYayasan.id_yayasan;
-      jadiAdministrator = false;
-    } else {
-      const { data: newYayasan, error: yayasanError } = await supabase
-        .from("yayasan")
-        .insert({ nama_yayasan: nama_yayasan.trim() })
-        .select()
-        .single();
-
-      if (yayasanError || !newYayasan) {
-        return res.status(400).json({ message: yayasanError?.message ?? "Gagal membuat yayasan" });
-      }
-      idYayasan = newYayasan.id_yayasan;
-      jadiAdministrator = true;
+      .eq("id_yayasan", idYayasanDipilih)
+      .single();
+    if (!yayasanAda) return res.status(400).json({ message: "Yayasan tidak ditemukan" });
+    idYayasan = yayasanAda.id_yayasan;
+    jadiAdministrator = false;
+  } else {
+    const { data: newYayasan, error: yayasanError } = await supabase
+      .from("yayasan")
+      .insert({ nama_yayasan: nama_yayasan.trim() })
+      .select()
+      .single();
+    if (yayasanError || !newYayasan) {
+      return res.status(400).json({ message: yayasanError?.message ?? "Gagal membuat yayasan" });
     }
+    idYayasan = newYayasan.id_yayasan;
+    jadiAdministrator = true;
   }
 
   const { data: created, error: createError } = await supabase.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
+    email, password, email_confirm: true,
   });
-
   if (createError || !created.user) {
     return res.status(400).json({ message: createError?.message ?? "Registrasi gagal" });
   }
@@ -77,11 +82,7 @@ router.post("/register", async (req, res) => {
   const { data: profile, error: profileError } = await supabase
     .from("administrators")
     .insert({
-      id_admin: created.user.id,
-      email,
-      nama_staf,
-      id_yayasan: idYayasan,
-      no_wa: noWaBersih,
+      id_admin: created.user.id, email, nama_staf, id_yayasan: idYayasan, no_wa: noWaBersih,
       role: jadiAdministrator ? "administrator" : "pengawas",
     })
     .select()

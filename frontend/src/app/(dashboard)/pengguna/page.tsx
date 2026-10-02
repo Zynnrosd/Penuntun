@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Modal } from "@/components/ui/Modal";
 import { api } from "@/lib/api-client";
@@ -9,6 +10,7 @@ export default function PenggunaPage() {
   const [data, setData] = useState<PenggunaTunanetra[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [cari, setCari] = useState("");
 
   const [modal, setModal] = useState<"tambah" | "edit" | null>(null);
   const [editing, setEditing] = useState<PenggunaTunanetra | null>(null);
@@ -71,44 +73,68 @@ export default function PenggunaPage() {
   if (loading) return <p className="text-text-secondary">Memuat data...</p>;
   if (error) return <p className="text-danger">Gagal memuat: {error}</p>;
 
+  const filtered = data.filter(
+    (p) =>
+      p.nama_tunanetra.toLowerCase().includes(cari.toLowerCase()) ||
+      (p.alamat ?? "").toLowerCase().includes(cari.toLowerCase())
+  );
+
   return (
     <div>
-      <PageHeader title="Kelola Pengguna Tunanetra" />
-      <div className="mb-6 flex justify-end">
-        <button onClick={bukaTambah} className="rounded-input bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover">
+      <PageHeader title="Kelola Pengguna Tunanetra" subtitle="Kelola data profil penyandang tunanetra di yayasan Anda" />
+
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative sm:w-72">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+          <input
+            type="text"
+            placeholder="Cari nama atau alamat..."
+            value={cari}
+            onChange={(e) => setCari(e.target.value)}
+            className="w-full rounded-pill border border-border py-2 pl-9 pr-3 text-sm outline-none focus:border-primary"
+          />
+        </div>
+        <button
+          onClick={bukaTambah}
+          className="rounded-input bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+        >
           + Tambah Pengguna
         </button>
       </div>
 
       <div className="overflow-hidden rounded-card bg-surface shadow-card">
-        {data.length === 0 ? (
-          <p className="p-8 text-center text-sm text-text-secondary">Belum ada pengguna terdaftar.</p>
+        {filtered.length === 0 ? (
+          <p className="p-8 text-center text-sm text-text-secondary">
+            {data.length === 0 ? "Belum ada pengguna terdaftar." : "Tidak ada hasil untuk pencarian ini."}
+          </p>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-surface-sunken text-left text-text-secondary">
-              <tr>
-                <th className="px-4 py-3">Nama</th>
-                <th className="px-4 py-3">Alamat</th>
-                <th className="px-4 py-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((p) => (
-                <tr key={p.id_tunanetra} className="border-t border-border">
-                  <td className="px-4 py-3 font-medium text-text-primary">{p.nama_tunanetra}</td>
-                  <td className="px-4 py-3 text-text-secondary">{p.alamat ?? "-"}</td>
-                  <td className="px-4 py-3">
-                    <button onClick={() => bukaEdit(p)} className="mr-2 text-sm text-primary hover:underline">
-                      Edit
-                    </button>
-                    <button onClick={() => setHapusTarget(p)} className="text-sm text-danger hover:underline">
-                      Hapus
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-surface-sunken text-left text-text-secondary">
+                <tr>
+                  <th className="px-4 py-3">Nama</th>
+                  <th className="px-4 py-3">Alamat</th>
+                  <th className="px-4 py-3">Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <tr key={p.id_tunanetra} className="border-t border-border">
+                    <td className="whitespace-nowrap px-4 py-3 font-medium text-text-primary">{p.nama_tunanetra}</td>
+                    <td className="px-4 py-3 text-text-secondary">{p.alamat ?? "-"}</td>
+                    <td className="whitespace-nowrap px-4 py-3">
+                      <button onClick={() => bukaEdit(p)} className="mr-2 text-sm text-primary hover:underline">
+                        Edit
+                      </button>
+                      <button onClick={() => setHapusTarget(p)} className="text-sm text-danger hover:underline">
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

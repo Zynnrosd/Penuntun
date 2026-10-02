@@ -1,46 +1,46 @@
-//frontend/src/components/auth/AuthVisualPanel.tsx
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
-import { PersonStanding, TriangleAlert, MapPin, ShieldCheck, Users, Clock } from "lucide-react";
+type Props = {
+  photoSrc: string;
+  photoPosition?: string;
+  eyebrow: string;
+  headline: string;
+  subheadline: string;
+  ctaHref: string;
+  ctaLabel: string;
+};
 
-export function AuthVisualPanel({ tagline }: { tagline: string }) {
+export function AuthVisualPanel({
+  photoSrc,
+  photoPosition = "center",
+  eyebrow,
+  headline,
+  subheadline,
+  ctaHref,
+  ctaLabel,
+}: Props) {
   return (
     <div className="relative hidden h-full w-full overflow-hidden rounded-[2.5rem] bg-secondary md:block">
-      {/* Glow dekoratif */}
-      <div className="absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
-      <div className="absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-success/20 blur-3xl" />
+      <Image src={photoSrc} alt="" fill priority className="object-cover" style={{ objectPosition: photoPosition }} />
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-secondary via-secondary/60 to-transparent" />
 
-      <div className="relative flex h-full flex-col justify-between p-10">
-        <p className="max-w-xs text-lg font-medium leading-snug text-white/90">{tagline}</p>
-
-        {/* Ilustrasi: radar deteksi + pengguna */}
-        <div className="relative mx-auto flex h-56 w-56 items-center justify-center">
-          <span className="absolute h-full w-full rounded-full border border-white/20 animate-radar" />
-          <span className="absolute h-full w-full rounded-full border border-white/20 animate-radar" style={{ animationDelay: "0.8s" }} />
-          <span className="absolute h-full w-full rounded-full border border-white/20 animate-radar" style={{ animationDelay: "1.6s" }} />
-
-          <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-modal">
-            <PersonStanding size={34} className="text-secondary" />
-          </div>
-
-          <div className="absolute -left-2 top-3 flex h-11 w-11 animate-float items-center justify-center rounded-2xl bg-danger shadow-card">
-            <TriangleAlert size={18} className="text-white" />
-          </div>
-          <div className="absolute -right-3 bottom-6 flex h-11 w-11 animate-float items-center justify-center rounded-2xl bg-primary shadow-card" style={{ animationDelay: "1s" }}>
-            <MapPin size={18} className="text-white" />
-          </div>
+      <div className="relative flex h-full flex-col justify-between p-8">
+        <div className="flex items-center justify-between">
+          <Image src="/logo-blue.png" alt="PENUNTUN" width={40} height={40} />
+          <Link
+            href={ctaHref}
+            className="flex items-center gap-1.5 rounded-pill bg-white px-5 py-2.5 text-sm font-semibold text-secondary shadow-card transition-colors hover:bg-white/90"
+          >
+            {ctaLabel} <ArrowUpRight size={15} />
+          </Link>
         </div>
 
-        <div className="flex justify-between text-white/80">
-          {[
-            { icon: <ShieldCheck size={16} />, label: "Data terenkripsi" },
-            { icon: <Users size={16} />, label: "Multi-yayasan" },
-            { icon: <Clock size={16} />, label: "Real-time" },
-          ].map((b) => (
-            <div key={b.label} className="flex items-center gap-1.5 text-xs">
-              {b.icon}
-              {b.label}
-            </div>
-          ))}
+        <div className="max-w-sm">
+          <span className="mb-2 block text-xs font-semibold uppercase tracking-widest text-white/60">{eyebrow}</span>
+          <h2 className="text-3xl font-bold leading-tight text-white">{headline}</h2>
+          <p className="mt-3 text-sm text-white/75">{subheadline}</p>
         </div>
       </div>
     </div>
